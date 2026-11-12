@@ -1,0 +1,165 @@
+---
+import Base from '../layouts/Base.astro';
+import precios from '../data/precios.json';
+import sitio from '../data/sitio.json';
+
+const mxn = (v) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(v);
+const fecha = new Date(precios.actualizado + 'T12:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// Ejemplo real del hero: firme de 5 × 4 m, 8 cm, f'c 150 con grava (misma fórmula que el cotizador).
+const vol = 5 * 4 * 0.08 * 1.05;
+const medios = (m3) => Math.ceil(m3 / 0.5 - 1e-9);
+const costoAg = (k, m3) => { const n = medios(m3); const a = precios.agregados[k]; return Math.floor(n / 2) * a.metro + (n % 2) * a.medio; };
+const ej = [
+  { n: 'Cemento Cruz Azul', q: Math.ceil(vol * 7) + ' bultos', t: Math.ceil(vol * 7) * precios.productos.cemento.precio },
+  { n: 'Gravilla fina', q: (medios(vol * 0.55) / 2).toString().replace('.', '.') + ' m³', t: costoAg('gravillaF', vol * 0.55) },
+  { n: 'Grava', q: (medios(vol * 0.65) / 2) + ' m³', t: costoAg('grava', vol * 0.65) },
+];
+const ejTotal = ej.reduce((s, l) => s + l.t, 0);
+
+const obras = [
+  { id: 'firme', t: 'Firme de concreto', d: 'Patio, cochera o el piso de un cuarto.', cota: 'L × A × espesor' },
+  { id: 'losa', t: 'Losa', d: 'Techo de concreto con parrilla de varilla.', cota: 'L × A · varilla @ 20 cm' },
+  { id: 'muro', t: 'Muro de block', d: 'Barda o muro con castillos y dala.', cota: 'L × alto · 12.5 pzas/m²' },
+  { id: 'aplanado', t: 'Aplanado', d: 'Enjarre rústico y, si quieres, acabado liso.', cota: 'm² × 1.5 cm' },
+];
+const p = precios.productos, a = precios.agregados;
+const tabla = [
+  [p.cemento.nombre, p.cemento.detalle, mxn(p.cemento.precio)],
+  [a.gravillaF.nombre, '½ m³ · 1 m³', mxn(a.gravillaF.medio) + ' · ' + mxn(a.gravillaF.metro)],
+  [a.gravillaN.nombre, '½ m³ · 1 m³', mxn(a.gravillaN.medio) + ' · ' + mxn(a.gravillaN.metro)],
+  [a.grava.nombre, '½ m³ · 1 m³', mxn(a.grava.medio) + ' · ' + mxn(a.grava.metro)],
+  [p.blockH.nombre, p.blockH.detalle, mxn(p.blockH.precio)],
+  [p.varilla.nombre, p.varilla.detalle, mxn(p.varilla.precio)],
+  [p.armex10.nombre, p.armex10.detalle, mxn(p.armex10.precio)],
+];
+---
+<Base title="Obra al Día · ¿Cuánto cuesta tu obra?" description="Calcula el material de tu obra con precios reales de Cosoleacaque y alrededores, y recibe tu cotización por WhatsApp." active="inicio">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow">Para {sitio.zona}</p>
+        <h1 class="display hero-t">¿Cuánto cuesta<br />tu obra?</h1>
+        <p class="lead">Pon las medidas, te sale la lista de material con precios reales de la zona y te la mandamos por WhatsApp. Sin choros y sin compromiso.</p>
+        <div class="cta">
+          <a class="btn primary" href="cotizador.html">Calcular mi obra</a>
+          <a class="btn ghost" href="#precios">Ver precios</a>
+        </div>
+      </div>
+      <figure class="ticket" aria-label="Ejemplo de cotización">
+        <div class="ticket-h"><span class="mono">COTIZACIÓN · EJEMPLO</span><span class="mono">5.00 × 4.00 m</span></div>
+        <p class="ticket-t">Firme de concreto, 8 cm</p>
+        <table>
+          <tbody>
+            {ej.map((l) => (<tr><td>{l.n}<span class="sub mono">{l.q}</span></td><td class="n"><strong>{mxn(l.t)}</strong></td></tr>))}
+          </tbody>
+        </table>
+        <div class="ticket-tot"><span>Total estimado</span><strong>{mxn(ejTotal)}</strong></div>
+        <figcaption class="mono">Precios al {fecha}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="t-obras">
+    <div class="sec-h"><p class="eyebrow">Calculadoras</p><h2 id="t-obras" class="h2">¿Qué vas a construir?</h2></div>
+    <div class="obras">
+      <a class="obra destacada" href="encalar-navidad.html">
+        <span class="obra-tag">Especial de Navidad</span>
+        <span class="obra-t">Encalar la casa</span>
+        <span class="obra-d">Cal con cemento blanco, por partes, para dejarla blanca antes de las fiestas. Sale barata, el muro queda fresco y dura más que la cal sola.</span>
+        <span class="obra-c mono">Serie · ¿Cuánto cuesta…?</span>
+        <span class="obra-go">Ver la serie →</span>
+      </a>
+      {obras.map((o) => (
+        <a class="obra" href={'cotizador.html#' + o.id}>
+          <span class="obra-t">{o.t}</span>
+          <span class="obra-d">{o.d}</span>
+          <span class="obra-c mono">{o.cota}</span>
+          <span class="obra-go">Calcular →</span>
+        </a>
+      ))}
+      <div class="obra pronto"><span class="obra-t">Baño completo</span><span class="obra-d">Muros, firme, plomería y loseta.</span><span class="obra-c mono">Próximamente</span></div>
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="t-pasos">
+    <div class="sec-h"><p class="eyebrow">Así funciona</p><h2 id="t-pasos" class="h2">De la medida al material en 3 pasos</h2></div>
+    <ol class="pasos">
+      <li><span class="num">1</span><h3>Pon tus medidas</h3><p>Largo, ancho y espesor. Si no sabes alguna, deja la que viene: es lo más común.</p></li>
+      <li><span class="num">2</span><h3>Revisa tu lista</h3><p>Cemento, gravillas, block y acero ya redondeados como se venden: por bulto, pieza o medio metro.</p></li>
+      <li><span class="num">3</span><h3>Pídela por WhatsApp</h3><p>Mándanos tu lista y te confirmamos precio, existencia y flete a tu colonia.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap block" id="precios" aria-labelledby="t-precios">
+    <div class="sec-h"><p class="eyebrow">Actualizados al {fecha}</p><h2 id="t-precios" class="h2">Precios de la zona</h2></div>
+    <div class="panel">
+      <div class="tablewrap"><table>
+        <thead><tr><th>Material</th><th>Presentación</th><th class="n">Precio</th></tr></thead>
+        <tbody>{tabla.map((r) => (<tr><td>{r[0]}</td><td class="mono">{r[1]}</td><td class="n"><strong>{r[2]}</strong></td></tr>))}</tbody>
+      </table></div>
+      <p class="fine">Precios de venta con IVA. Fuente: {precios.fuente} Pueden cambiar; confírmalos al pedir.</p>
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="t-videos">
+    <div class="videos">
+      <div>
+        <p class="eyebrow">Aprende antes de comprar</p>
+        <h2 id="t-videos" class="h2">Visto en Obra al Día</h2>
+        <p>Explico materiales y obra con humor y sin tecnicismos. Series como <strong>Construir vs. Comprar</strong> y <strong>¿Cuánto cuesta…?</strong>, con precios de aquí, no de la capital.</p>
+      </div>
+      <div class="cta">
+        <a class="btn dark" href={sitio.redes.tiktok} rel="noopener">TikTok</a>
+        <a class="btn ghost" href={sitio.redes.instagram} rel="noopener">Instagram</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+.hero{background:var(--surface);border-bottom:1px solid var(--line)}
+.hero-in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:32px;align-items:center;padding-block:44px 48px}
+@media (max-width:820px){.hero-in{grid-template-columns:minmax(0,1fr);padding-block:28px 32px}}
+.hero-copy{display:flex;flex-direction:column;gap:16px;min-width:0}
+.hero-t{font-size:clamp(52px,9vw,104px)}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.ticket{margin:0;background:var(--sunk);border:1.5px dashed var(--muted);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:8px;transform:rotate(-1.2deg)}
+@media (prefers-reduced-motion:reduce){.ticket{transform:none}}
+.ticket-h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:8px}
+.ticket-t{margin:0;font-weight:700}
+.ticket td{padding:8px 0}
+.ticket-tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding-top:8px}
+.ticket-tot span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ticket-tot strong{font-family:var(--f-display);font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
+.ticket figcaption{font-size:11px;color:var(--muted)}
+.block{padding-block:40px 0;display:flex;flex-direction:column;gap:20px}
+.sec-h{display:flex;flex-direction:column;gap:6px}
+.obras{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.obra{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:18px;text-decoration:none;min-height:170px}
+a.obra:hover{border-color:var(--ink)}
+.obra-t{font-family:var(--f-display);font-weight:700;font-size:26px;text-transform:uppercase;line-height:1}
+.obra-d{color:var(--muted);font-size:14px}
+.obra-c{font-size:12px;color:var(--plan);margin-top:auto}
+.obra-go{font-weight:700;font-size:14px}
+.obra.pronto{background:transparent;border-style:dashed}
+.obra.pronto .obra-c{color:var(--muted)}
+.obra.destacada{border:2px solid var(--ink);box-shadow:inset 6px 0 0 var(--accent)}
+.obra-tag{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+@media (min-width:800px){
+  .obra.destacada{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:24px;align-items:center;min-height:0}
+  .obra.destacada .obra-go{grid-column:2;grid-row:1/span 4;align-self:center}
+}
+.pasos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.pasos li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.pasos .num{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:1;color:var(--plan)}
+.pasos h3{margin:0;font-size:18px}
+.pasos p{margin:0;color:var(--muted);font-size:15px}
+.fine{margin:0;font-size:13px;color:var(--muted)}
+.videos{background:var(--accent);color:var(--on-accent);border-radius:10px;padding:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px 32px}
+.videos > div:first-child{max-width:60ch;display:flex;flex-direction:column;gap:8px}
+.videos p{margin:0}
+.videos .eyebrow{color:var(--on-accent);opacity:.75}
+.videos .btn.ghost{border-color:var(--on-accent);background:transparent;color:var(--on-accent)}
+.videos .btn.dark{background:var(--on-accent);color:var(--accent);border-color:var(--on-accent)}
+</style>

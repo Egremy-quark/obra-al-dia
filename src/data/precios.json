@@ -1,0 +1,22 @@
+{
+  "actualizado": "2026-11-11",
+  "fuente": "Ferromateriales El Puente, Cosoleacaque, Ver.",
+  "nota": "Precios de venta con IVA. Los agregados se venden por medio metro o metro.",
+  "productos": {
+    "cemento":  { "nombre": "Cemento Cruz Azul", "detalle": "bulto 50 kg", "unidad": "bulto", "plural": "bultos", "precio": 270 },
+    "varilla":  { "nombre": "Varilla 3/8\"", "detalle": "pieza de 12 m", "unidad": "pza", "plural": "pzas", "precio": 160 },
+    "alambre":  { "nombre": "Alambre recocido", "detalle": "por kilo", "unidad": "kg", "plural": "kg", "precio": 35 },
+    "armex10":  { "nombre": "Armex 10×10", "detalle": "castillos · pieza de 6 m", "unidad": "pza", "plural": "pzas", "precio": 185 },
+    "armex15":  { "nombre": "Armex 10×15", "detalle": "dala · pieza de 6 m", "unidad": "pza", "plural": "pzas", "precio": 195 },
+    "blockH":   { "nombre": "Block hueco 10×20×40", "detalle": "por pieza", "unidad": "pza", "plural": "pzas", "precio": 13.5 },
+    "blockT":   { "nombre": "Block tepezil 10×20×40", "detalle": "por pieza", "unidad": "pza", "plural": "pzas", "precio": 14 },
+    "cal":      { "nombre": "Cal hidratada", "detalle": "bulto · presentación por confirmar", "unidad": "bulto", "plural": "bultos", "precio": null },
+    "cementoBlanco": { "nombre": "Cemento blanco", "detalle": "bulto · presentación por confirmar", "unidad": "bulto", "plural": "bultos", "precio": null }
+  },
+  "agregados": {
+    "arena":     { "nombre": "Arena de playa", "medio": 350, "metro": 600 },
+    "gravillaF": { "nombre": "Gravilla fina", "medio": 400, "metro": 750 },
+    "gravillaN": { "nombre": "Gravilla normal", "medio": 350, "metro": 620 },
+    "grava":     { "nombre": "Grava", "medio": 500, "metro": 900 }
+  }
+}

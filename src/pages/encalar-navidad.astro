@@ -1,0 +1,343 @@
+---
+import Base from '../layouts/Base.astro';
+import precios from '../data/precios.json';
+import sitio from '../data/sitio.json';
+import serie from '../data/series/encalar-navidad.json';
+
+const cal = precios.productos.cal;
+const cem = precios.productos.cementoBlanco;
+const c = serie.calculadora;
+---
+<Base title="Encalar en Navidad · Obra al Día" description="Serie por partes para encalar la casa con cal y cemento blanco, y calcular los bultos antes de pedir el material por WhatsApp." active="navidad">
+  <div class="wrap page">
+    <header class="intro">
+      <p class="eyebrow">{serie.etiqueta} · {sitio.zona}</p>
+      <h1 class="display page-t">¿Vas a encalar para Navidad?<br />Hazlo bien y gasta menos</h1>
+      <p class="lead">La cal con cemento blanco sale barata, deja el muro fresco y dura más que la cal sola.</p>
+      <p class="lead">Es un intermedio de la serie ¿Cuánto cuesta…?, después de la parte 4: videos por partes.</p>
+    </header>
+
+    <section class="block" aria-labelledby="t-partes">
+      <div class="sec-h">
+        <p class="eyebrow">{serie.serie} · {serie.lugar}</p>
+        <h2 id="t-partes" class="h2">La serie por partes</h2>
+      </div>
+      <div class="partes">
+        {serie.partes.map((p) => (
+          <article class:list={['parte', { pronto: p.estado === 'proximamente' }]}>
+            <p class="parte-n mono">Parte {p.numero}{p.revisar ? ' · Aproximado' : ''}</p>
+            <h3 class="parte-t">{p.titulo}</h3>
+            <p class="parte-r">{p.resumen}</p>
+            <ol>
+              {p.pasos.map((paso) => <li>{paso}</li>)}
+            </ol>
+            <p class="consejo"><strong>Para gastar menos.</strong> {p.consejo_ahorro}</p>
+            {p.seguridad && <p class="aviso">{p.seguridad}</p>}
+            {p.video_url
+              ? <a class="btn dark" href={p.video_url} rel="noopener">Ver el video</a>
+              : <p class="estado mono">{p.estado === 'proximamente' ? 'Próximamente' : 'Video por salir'}</p>}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="panel" id="calculadora" aria-labelledby="t-calc">
+      <p class="eyebrow">Calculadora</p>
+      <h2 id="t-calc" class="h2 sm">¿Cuánta cal y cuánto cemento blanco?</h2>
+      <p class="desc">Pon el muro, las caras y las manos. Se redondea al bulto. Rendimiento, proporción y presentación son aproximados: hay que confirmarlos.</p>
+
+      <div class="modo" role="radiogroup" aria-label="Cómo das el área">
+        <label class="modo-opt"><input type="radio" name="modo" value="medidas" checked /> Largo y alto</label>
+        <label class="modo-opt"><input type="radio" name="modo" value="m2" /> m² totales</label>
+      </div>
+
+      <div class="fields" id="box-medidas">
+        <div class="field">
+          <label for="f-largo">Largo del muro</label>
+          <div class="in"><input id="f-largo" type="number" inputmode="decimal" min="0" step="0.1" /><span class="u">m</span></div>
+        </div>
+        <div class="field">
+          <label for="f-alto">Alto del muro</label>
+          <div class="in"><input id="f-alto" type="number" inputmode="decimal" min="0" step="0.1" /><span class="u">m</span></div>
+        </div>
+      </div>
+      <div class="fields" id="box-m2" hidden>
+        <div class="field">
+          <label for="f-m2">m² totales</label>
+          <div class="in"><input id="f-m2" type="number" inputmode="decimal" min="0" step="0.1" /><span class="u">m²</span></div>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="f-caras">Caras</label>
+          <div class="in"><input id="f-caras" type="number" inputmode="numeric" min="1" step="1" value="1" /><span class="u">caras</span></div>
+        </div>
+        <div class="field">
+          <label for="f-manos">Manos</label>
+          <div class="in"><input id="f-manos" type="number" inputmode="numeric" min="1" step="1" /><span class="u">manos</span></div>
+        </div>
+      </div>
+      <p class="fine">Si los m² ya incluyen todas las caras, deja caras en 1. Cuántas manos das lo marcas tú.</p>
+
+      <div class="facts" aria-label="Supuestos de la cuenta">
+        <span class="fact mono">{c.proporcion_cal_partes} partes de cal por {c.proporcion_cemento_blanco_partes} de cemento blanco, en {c.proporcion_en} · aproximado</span>
+        <span class="fact mono">{c.rendimiento_cal_kg_por_m2_por_mano} kg de cal por m² por mano · aproximado</span>
+        <span class="fact mono">Bulto de cal {c.bulto_cal_kg} kg · aproximado</span>
+        <span class="fact mono">Bulto de cemento blanco {c.bulto_cemento_blanco_kg} kg · aproximado</span>
+      </div>
+
+      <div class="tablewrap"><table>
+        <thead><tr><th>Material</th><th class="n">Compra</th><th class="n pr">Precio</th><th class="n">Importe</th></tr></thead>
+        <tbody id="lines"><tr><td colspan="4" class="desc">Pon las medidas, las caras y las manos.</td></tr></tbody>
+      </table></div>
+      <div class="total"><span id="tot-label">Total</span><strong id="tot" class="texto">—</strong></div>
+      <p class="fine" id="area-nota"></p>
+
+      <form id="waForm" class="form">
+        <div class="field"><label for="f-nombre">Tu nombre</label><input id="f-nombre" name="nombre" autocomplete="name" /></div>
+        <div class="field"><label for="f-col">Colonia o localidad</label><input id="f-col" name="colonia" /></div>
+        <div class="field full"><label for="f-cuando">¿Cuándo empiezas?</label>
+          <select id="f-cuando" name="cuando"><option value="">Prefiero no decir</option><option>Esta semana</option><option>Este mes</option><option>En 1 a 3 meses</option><option>Solo estoy cotizando</option></select></div>
+        <div class="actions full"><button class="btn wa big" type="submit" id="send" disabled>Enviar por WhatsApp</button></div>
+        <p class="err full" id="toast" aria-live="polite"></p>
+        <p class="fine full">Se abre WhatsApp con tu lista ya escrita; solo le das enviar. Las cantidades van marcadas como aproximadas.</p>
+      </form>
+    </section>
+
+    <section class="notes" aria-label="Cómo se calcula">
+      <div><h3>De dónde sale la cuenta</h3>La cal se estima con el rendimiento por m² y por mano. El cemento blanco sale de la proporción. Los dos, y los kilos del bulto, están marcados como aproximados hasta confirmarlos.</div>
+      <div><h3>Qué incluye</h3><ul><li>Redondeo al bulto de más, como se vende.</li><li>Las caras y las manos que tú pongas.</li></ul></div>
+      <div><h3>Qué no incluye</h3><ul><li>Desperdicio, muro muy poroso, mano de obra, brocha, andamio, agua ni flete.</li><li>La cal y el cemento irritan la piel y los ojos. Usa guantes y lentes.</li></ul></div>
+    </section>
+
+    <section class="cierre" aria-labelledby="t-cierre">
+      <div>
+        <p class="eyebrow">Para ver la serie</p>
+        <h2 id="t-cierre" class="h2">Pide tu material por WhatsApp</h2>
+        <p>Te confirmamos precio, existencia y el flete a tu colonia. Los videos van saliendo en TikTok y en Instagram, @obra.al.dia.</p>
+      </div>
+      <div class="cta">
+        <a class="btn wa" href="#calculadora">Armar mi lista</a>
+        <a class="btn dark" href={sitio.redes.tiktok} rel="noopener">TikTok</a>
+        <a class="btn ghost" href={sitio.redes.instagram} rel="noopener">Instagram</a>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { enviarPedido } from '../lib/whatsapp.js';
+  import { activarEventos } from '../lib/umami.js';
+  window.obraEnviarPedido = enviarPedido;
+  activarEventos();
+</script>
+<script is:inline define:vars={{ REND: c, CAL: cal, CEM: cem, WHATSAPP: sitio.whatsapp }}>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  const nf = (v, d) => v.toLocaleString('es-MX', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const rendCal = Number(REND.rendimiento_cal_kg_por_m2_por_mano);
+  const pCal = Number(REND.proporcion_cal_partes);
+  const pCem = Number(REND.proporcion_cemento_blanco_partes);
+  const bultoCal = Number(REND.bulto_cal_kg);
+  const bultoCem = Number(REND.bulto_cemento_blanco_kg);
+  const listo = rendCal > 0 && pCal > 0 && pCem > 0;
+
+  function num(id) {
+    const v = parseFloat(String($(id).value).replace(',', '.'));
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  }
+  function entero(id) {
+    const v = parseInt(String($(id).value).replace(',', '.'), 10);
+    return Number.isFinite(v) && v >= 1 ? v : 0;
+  }
+  function precioDe(p) {
+    if (p === null || p === undefined || p === '') return null;
+    const n = Number(p);
+    return Number.isFinite(n) ? n : null;
+  }
+  function bultosDe(kg, bulto) {
+    if (!(bulto > 0)) return null;
+    return Math.ceil(kg / bulto - 1e-9);
+  }
+  function modo() {
+    const el = document.querySelector('input[name="modo"]:checked');
+    return el ? el.value : 'medidas';
+  }
+  function leer() {
+    const m = modo();
+    const caras = entero('f-caras');
+    const manos = entero('f-manos');
+    const base = m === 'medidas' ? num('f-largo') * num('f-alto') : num('f-m2');
+    return { m, base, caras, manos, ok: listo && base > 0 && caras >= 1 && manos >= 1 };
+  }
+  function compra(prod, kg, bultos) {
+    const precio = precioDe(prod.precio);
+    const qty = bultos == null ? nf(kg, 2) + ' kg' : bultos + ' ' + (bultos === 1 ? prod.unidad : prod.plural);
+    const sub = nf(kg, 2) + ' kg · aproximado' + (bultos == null ? ' · bulto por confirmar' : ' · se redondea al bulto');
+    const total = precio == null || bultos == null ? null : bultos * precio;
+    return {
+      name: prod.nombre,
+      sub,
+      qty,
+      price: precio == null ? 'Precio por confirmar' : mxn.format(precio),
+      total
+    };
+  }
+  function textoDe(x, area, filas) {
+    const medida = x.m === 'medidas'
+      ? 'Muro ' + nf(num('f-largo'), 2) + ' × ' + nf(num('f-alto'), 2) + ' m'
+      : nf(x.base, 2) + ' m²';
+    const caras = x.caras + (x.caras === 1 ? ' cara' : ' caras');
+    const manos = x.manos + (x.manos === 1 ? ' mano' : ' manos');
+    const dinero = (f) => (f.total == null ? 'Precio por confirmar' : mxn.format(f.total));
+    const suma = filas.every((f) => f.total != null) ? filas.reduce((s, f) => s + f.total, 0) : null;
+    const lineas = [
+      'Hola, quiero cotizar este material (Obra al Día):',
+      'Encalado de Navidad · cal con cemento blanco',
+      medida + ' · ' + caras + ' · ' + manos,
+      'Área aproximada: ' + nf(area, 2) + ' m²',
+      '',
+      ...filas.map((f) => '• ' + f.name + ': ' + f.qty + ' (' + f.sub + ') → ' + dinero(f)),
+      ''
+    ];
+    lineas.push(suma == null ? 'Total: precio por confirmar' : 'Total estimado: ' + mxn.format(suma));
+    lineas.push('Cantidades aproximadas, pendientes de confirmar.');
+    lineas.push('¿Me confirman existencia y flete?');
+    return lineas.join('\n');
+  }
+
+  let last = null;
+  let lastTotal = null;
+  function pintarVacio(msg) {
+    last = null;
+    lastTotal = null;
+    $('lines').innerHTML = '<tr><td colspan="4" class="desc">' + msg + '</td></tr>';
+    $('tot').textContent = '—';
+    $('tot').className = 'texto';
+    $('tot-label').textContent = 'Total';
+    $('area-nota').textContent = '';
+    $('send').disabled = true;
+  }
+  function update() {
+    $('toast').textContent = '';
+    const m = modo();
+    $('box-medidas').hidden = m !== 'medidas';
+    $('box-m2').hidden = m !== 'm2';
+    if (!listo) {
+      pintarVacio('Falta confirmar el rendimiento o la proporción. La cuenta no se cierra todavía.');
+      return;
+    }
+    const x = leer();
+    if (!x.ok) {
+      pintarVacio('Pon las medidas, las caras y las manos, todas mayores a cero.');
+      return;
+    }
+    const area = x.base * x.caras;
+    const kgDe = (n) => Math.round(n * 1000) / 1000;
+    const kgCal = kgDe(area * x.manos * rendCal);
+    const kgCem = kgDe(kgCal * (pCem / pCal));
+    const filas = [
+      compra(CAL, kgCal, bultosDe(kgCal, bultoCal)),
+      compra(CEM, kgCem, bultosDe(kgCem, bultoCem))
+    ];
+    $('lines').innerHTML = '';
+    filas.forEach((f) => {
+      const tr = document.createElement('tr');
+      const importe = f.total == null ? 'Precio por confirmar' : mxn.format(f.total);
+      tr.innerHTML = '<td>' + f.name + '<span class="sub">' + f.sub + '</span></td><td class="n mono">' + f.qty + '</td><td class="n pr">' + f.price + '</td><td class="n"><strong>' + importe + '</strong></td>';
+      $('lines').appendChild(tr);
+    });
+    const suma = filas.every((f) => f.total != null) ? filas.reduce((s, f) => s + f.total, 0) : null;
+    $('tot').textContent = suma == null ? 'Precio por confirmar' : mxn.format(suma);
+    $('tot').className = suma == null ? 'texto' : '';
+    $('tot-label').textContent = suma == null ? 'Total' : 'Total estimado';
+    $('area-nota').textContent = 'Área aproximada: ' + nf(area, 2) + ' m² · ' + x.manos + (x.manos === 1 ? ' mano' : ' manos') + '.';
+    $('send').disabled = false;
+    last = textoDe(x, area, filas);
+    lastTotal = suma;
+  }
+
+  document.querySelectorAll('input[name="modo"], #f-largo, #f-alto, #f-m2, #f-caras, #f-manos').forEach((el) => {
+    el.addEventListener('input', update);
+    el.addEventListener('change', update);
+  });
+  $('waForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!last || typeof window.obraEnviarPedido !== 'function') {
+      $('toast').textContent = 'Pon las medidas primero.';
+      return;
+    }
+    window.obraEvento('whatsapp_enviado', { obra: 'encalar', total: lastTotal });
+    window.obraEnviarPedido(WHATSAPP, last, {
+      nombre: $('f-nombre').value,
+      colonia: $('f-col').value,
+      cuando: $('f-cuando').value
+    });
+  });
+  update();
+  window.obraEvento('obra_calculada', { obra: 'encalar' });
+})();
+</script>
+
+<style>
+.page{padding-block:28px 0;display:flex;flex-direction:column;gap:28px}
+.intro,.sec-h{display:flex;flex-direction:column;gap:10px}
+.page-t{font-size:clamp(34px,7vw,72px)}
+.h2.sm{font-size:26px}
+.block{display:flex;flex-direction:column;gap:16px}
+.partes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.parte{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.parte.pronto{background:transparent;border-style:dashed;border-color:var(--muted)}
+.parte-n,.estado{margin:0;font-size:12px;color:var(--muted)}
+.parte-t{margin:0;font-family:var(--f-display);font-weight:700;font-size:28px;text-transform:uppercase;line-height:1}
+.parte-r,.consejo{margin:0}
+.parte ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.parte li{font-size:15px}
+.consejo{font-size:14px}
+.aviso{margin:0;font-size:14px;background:var(--sunk);border-left:3px solid var(--danger);padding:8px 12px}
+.estado{margin-top:auto}
+.desc{margin:0;color:var(--muted);font-size:14px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:13px;font-weight:600}
+.field .in{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.field input,.field select{font:inherit;font-size:15px;border:0;background:transparent;color:var(--ink);padding:9px 10px;width:100%;min-width:0}
+.field .in input{font-family:var(--f-mono)}
+.field .u{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding:0 10px;white-space:nowrap}
+.modo{display:flex;flex-wrap:wrap;gap:8px}
+.modo-opt{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--sunk);color:var(--ink);border-radius:8px;padding:10px 12px;font-weight:600;font-size:14px;cursor:pointer}
+.modo-opt:has(input:checked){background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.facts{display:flex;flex-wrap:wrap;gap:8px}
+.fact{font-size:12px;background:var(--plan-soft);color:var(--ink);padding:4px 8px;border-radius:6px}
+.fine{margin:0;font-size:13px;color:var(--muted)}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.total span{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.total strong{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.total strong.texto{font-family:var(--f-body);font-size:18px;font-weight:700;text-align:right}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form .field input,.form .field select{border:1.5px solid var(--line);border-radius:8px;background:var(--surface)}
+.form .full{grid-column:1/-1}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn.big{width:100%;font-size:18px;padding:14px 18px}
+.err{font-size:14px;font-weight:600;color:var(--danger);min-height:1.2em;margin:0}
+.notes{font-size:13px;color:var(--muted);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 24px}
+.notes h3{font-size:13px;font-weight:700;color:var(--ink);margin:0 0 4px;letter-spacing:.04em;text-transform:uppercase}
+.notes ul{margin:0;padding-left:18px}
+.cierre{background:var(--accent);color:var(--on-accent);border-radius:10px;padding:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px 32px}
+.cierre > div:first-child{max-width:60ch;display:flex;flex-direction:column;gap:8px}
+.cierre p{margin:0}
+.cierre .eyebrow{color:var(--on-accent);opacity:.75}
+.cierre .btn.ghost{border-color:var(--on-accent);background:transparent;color:var(--on-accent)}
+.cierre .btn.dark{background:var(--on-accent);color:var(--accent);border-color:var(--on-accent)}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+@media (max-width:560px){
+  .pr,:global(.pr){display:none}
+  :global(td.n:last-child),:global(th.n:last-child){white-space:normal}
+}
+@media (max-width:420px){
+  .fields,.form{grid-template-columns:minmax(0,1fr)}
+  .parte{padding:16px}
+  .parte-t{font-size:24px}
+}
+</style>

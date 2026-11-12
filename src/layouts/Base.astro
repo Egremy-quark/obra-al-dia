@@ -1,0 +1,118 @@
+---
+import sitio from '../data/sitio.json';
+import Analytics from '@vercel/analytics/astro';
+const { title, description, active = '' } = Astro.props;
+const umamiId = String(sitio.umami_id || '').trim();
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="claude:viewport-fit-sides" content="cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  <Analytics />
+  {umamiId && <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id={umamiId}></script>}
+</head>
+<body>
+  <script is:inline>
+    window.obraEventosPendientes = window.obraEventosPendientes || [];
+    window.obraEvento = function (nombre, datos) {
+      window.obraEventosPendientes.push({ nombre: nombre, datos: datos });
+    };
+  </script>
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="logo" href="index.html" aria-label="Obra al Día, inicio">Obra al Día</a>
+      <nav aria-label="Principal">
+        <a href="index.html" aria-current={active === 'inicio' ? 'page' : undefined}>Inicio</a>
+        <a href="cotizador.html" aria-current={active === 'cotizador' ? 'page' : undefined}>Cotizador</a>
+        <a href="encalar-navidad.html" aria-current={active === 'navidad' ? 'page' : undefined}>Navidad</a>
+        <a href="index.html#precios">Precios</a>
+      </nav>
+    </div>
+  </header>
+  <main><slot /></main>
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <div>
+        <p class="logo small">Obra al Día</p>
+        <p>{sitio.lema}</p>
+      </div>
+      <div>
+        <p class="eyebrow">Sígueme</p>
+        <p><a href={sitio.redes.tiktok} rel="noopener">TikTok @obra.al.dia</a><br /><a href={sitio.redes.instagram} rel="noopener">Instagram @obra.al.dia</a></p>
+      </div>
+      <div>
+        <p class="eyebrow">Aviso</p>
+        <p>Precios de referencia; pueden cambiar sin aviso. Las cantidades son estimadas y no sustituyen el cálculo de un ingeniero o maestro de obra.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
+<style is:global>
+/* Sistema: banda amarilla de obra + tinta pizarra; tipografía de rótulo (Big Shoulders), texto Public Sans, cotas en Plex Mono. */
+:root{
+  --bg:#ECEEEA; --surface:#FFFFFF; --sunk:#F5F6F3; --ink:#1B2228; --muted:#5A6570; --line:#CED4D6;
+  --accent:#F2B705; --on-accent:#1B2228; --plan:#2E5C88; --plan-soft:rgba(46,92,136,.14); --ok:#2F7A4B; --danger:#B23A2B;
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13171A; --surface:#1C2227; --sunk:#171C20; --ink:#E7EBED; --muted:#9AA6AE; --line:#323B42;
+  --plan:#86AFD6; --plan-soft:rgba(134,175,214,.16); --ok:#6BC08D; --danger:#E07563; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13171A; --surface:#1C2227; --sunk:#171C20; --ink:#E7EBED; --muted:#9AA6AE; --line:#323B42;
+  --plan:#86AFD6; --plan-soft:rgba(134,175,214,.16); --ok:#6BC08D; --danger:#E07563; color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{background:var(--accent);color:var(--on-accent);border-bottom:5px solid var(--on-accent)}
+.top-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-block:12px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1;text-transform:uppercase;letter-spacing:.01em;text-decoration:none;margin:0}
+.logo.small{font-size:24px}
+.top nav{display:flex;gap:4px;flex-wrap:wrap}
+.top nav a{font-weight:600;font-size:15px;text-decoration:none;padding:6px 10px;border-radius:6px}
+.top nav a[aria-current="page"]{background:var(--on-accent);color:var(--accent)}
+.top nav a:hover{text-decoration:underline}
+h1,h2,h3{text-wrap:balance}
+.display{font-family:var(--f-display);font-weight:800;text-transform:uppercase;line-height:.92;letter-spacing:.005em;margin:0}
+.h2{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1;text-transform:uppercase;letter-spacing:.015em;margin:0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
+.lead{font-size:18px;max-width:52ch;margin:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:700;font-size:16px;padding:12px 18px;border-radius:8px;cursor:pointer;border:2px solid var(--ink);background:var(--surface);color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn.dark{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn.wa{background:#1F8F4E;color:#fff;border-color:#1F8F4E}
+.btn.ghost{border-color:var(--line);font-weight:600}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--plan);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.mono{font-family:var(--f-mono)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 6px;border-bottom:2px solid var(--ink)}
+td{padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+td .sub{display:block;font-size:12px;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.foot{background:var(--ink);color:var(--surface);margin-top:48px}
+.foot-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px 32px;padding-block:28px 36px;font-size:14px}
+.foot p{margin:4px 0 0}
+.foot .eyebrow{color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.btn,.top nav a{transition:background-color .15s,border-color .15s}}
+</style>

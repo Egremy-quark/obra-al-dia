@@ -1,0 +1,11 @@
+---
+description: Reglas de Obra al Día que aplican en cada tarea
+alwaysApply: true
+---
+
+Antes de cada tarea lee docs/CONTEXTO.md y, al terminar, anota en su sección Bitácora la fecha y lo que cambiaste.
+
+- Marca: Obra al Día. Tono directo, sin tecnicismos, con el vocabulario de la zona (Cosoleacaque, Minatitlán y alrededores): bulto, firme, losa, enjarre, gravilla, flete, colonia, maestro de obra, encalar.
+- Los precios viven solo en `src/data/precios.json`. Si no hay precio, va `null` y la página dice «Precio por confirmar». Nunca inventes un precio, un teléfono ni una dirección.
+- Proporción, rendimiento y tiempo sin confirmar llevan `revisar: true` y en la página se leen como aproximados.
+- El número de WhatsApp y las redes salen de `src/data/sitio.json`.

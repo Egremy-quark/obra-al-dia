@@ -1,0 +1,82 @@
+{
+  "serie": "¿Cuánto cuesta…?",
+  "lugar": "Intermedio, después de la parte 4",
+  "etiqueta": "Especial de Navidad",
+  "mezcla": "Cal con cemento blanco",
+  "calculadora": {
+    "revisar": true,
+    "nota": "BORRADOR para confirmar. No es medición de Ferromateriales El Puente ni de una obra de la zona. Rendimiento de cal: 0.1 kg por m² por mano, centro del rango de blanqueo líquido de la ficha Cemix Cal (12 a 20 m² por 1.5 kg en una mano). Proporción 5 a 1 en peso: propuesta, no la receta de la tienda. Bultos de 25 kg: presentación habitual, hay que confirmar cómo se venden aquí. No hay horas de reposo ni de secado: no hay un tiempo confirmado.",
+    "rendimiento_cal_kg_por_m2_por_mano": 0.1,
+    "proporcion_cal_partes": 5,
+    "proporcion_cemento_blanco_partes": 1,
+    "proporcion_en": "peso",
+    "bulto_cal_kg": 25,
+    "bulto_cemento_blanco_kg": 25
+  },
+  "partes": [
+    {
+      "numero": 1,
+      "titulo": "Qué comprar y cuánto",
+      "resumen": "Cal hidratada y cemento blanco, en bultos, según los muros que vas a encalar. La cuenta sale en la calculadora y es aproximada.",
+      "pasos": [
+        "Anota el largo y el alto de cada muro, o los m² si ya los tienes.",
+        "Cuenta las caras y las manos que vas a dar.",
+        "En la calculadora de abajo salen los bultos, redondeados como se venden.",
+        "Confirma la cuenta antes de comprar: el rendimiento todavía no está cerrado."
+      ],
+      "consejo_ahorro": "Saca la cuenta antes de ir por el material: así llevas los bultos que ocupas y no das dos viajes.",
+      "seguridad": "La cal y el cemento irritan la piel y los ojos. Aunque solo los estés cargando, usa guantes y lentes.",
+      "video_url": "",
+      "estado": "proximamente",
+      "revisar": true
+    },
+    {
+      "numero": 2,
+      "titulo": "Preparar el muro",
+      "resumen": "La mezcla no agarra en polvo, en lo que está flojo ni en un muro seco.",
+      "pasos": [
+        "Barre polvo, telaraña y lo suelto.",
+        "Quita con la cuchara lo que se desprenda.",
+        "Resana hoyos y grietas.",
+        "Humedece el muro antes de encalar: que quede húmedo, no empapado."
+      ],
+      "consejo_ahorro": "Quitar lo flojo ahora evita una mano que no va a agarrar y hay que repetir.",
+      "seguridad": "El polvo de cal vieja y el cemento irritan la piel y los ojos. Usa guantes y lentes al raspar y al resanar.",
+      "video_url": "",
+      "estado": "proximamente",
+      "revisar": true
+    },
+    {
+      "numero": 3,
+      "titulo": "Preparar la mezcla",
+      "resumen": "Cal hidratada con cemento blanco y agua. La proporción está en la calculadora y es aproximada hasta confirmarla.",
+      "pasos": [
+        "Mezcla en seco la cal hidratada y el cemento blanco con la proporción de la calculadora.",
+        "Agrega agua de poco en poco hasta que quede como pintura espesa, sin grumos.",
+        "Tápala y déjala reposar antes de usarla.",
+        "Vuélvela a revolver antes de cada mano."
+      ],
+      "consejo_ahorro": "Prepara solo lo que vas a aplicar hoy. Lo que se seca en la cubeta se tira.",
+      "seguridad": "La cal y el cemento irritan la piel y los ojos. Usa guantes y lentes al mezclar, y no te toques la cara.",
+      "video_url": "",
+      "estado": "proximamente",
+      "revisar": true
+    },
+    {
+      "numero": 4,
+      "titulo": "Aplicar",
+      "resumen": "Manos delgadas, con brocha o cepillo, fuera del sol fuerte. Las manos que hagan falta para tapar, no una cifra cerrada.",
+      "pasos": [
+        "Aplica manos delgadas. Una mano gruesa se cuartea y se cae.",
+        "Usa brocha o cepillo, parejo y en un sentido.",
+        "No encales a pleno sol ni con el muro caliente: se seca de golpe y no agarra.",
+        "Deja secar entre una mano y la siguiente, y da las que hagan falta para cubrir."
+      ],
+      "consejo_ahorro": "Una mano delgada bien puesta rinde más que una gruesa que hay que raspar y volver a comprar.",
+      "seguridad": "La cal y el cemento irritan la piel y los ojos. Usa guantes y lentes mientras encalas, y lava la brocha sin echarte la mezcla.",
+      "video_url": "",
+      "estado": "proximamente",
+      "revisar": true
+    }
+  ]
+}
