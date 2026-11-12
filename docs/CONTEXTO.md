@@ -48,3 +48,8 @@ Proporción, rendimiento o tiempo que no esté confirmado lleva `revisar: true`.
 
 - El proyecto no tenía git. Se inició el repositorio y se subió a https://github.com/Egremy-quark/obra-al-dia
 - `.gitignore` para no subir `node_modules`, `dist` ni la caché de Astro.
+
+### 2026-11-12 · Vercel
+
+- La guía de publicación del README quedó en Vercel: importar `Egremy-quark/obra-al-dia`, build `npm run build`, salida `dist`.
+- El comentario de `astro.config.mjs` apunta a Vercel.

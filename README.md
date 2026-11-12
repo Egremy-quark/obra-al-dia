@@ -20,6 +20,11 @@ Dos sitios, y ninguno guarda el nombre, el teléfono ni la colonia del cliente.
     npm install
     npm run dev      # http://localhost:4321
 
-## Publicar en Netlify
-- Rápido: `npm run build` y arrastra la carpeta `dist/` a app.netlify.com/drop.
-- Automático: sube el proyecto a GitHub y en Netlify elige "Import from Git"; `netlify.toml` ya trae la configuración.
+## Publicar en Vercel
+En [vercel.com](https://vercel.com), entra a **Add New… → Project** e importa `Egremy-quark/obra-al-dia`.
+
+Vercel reconoce Astro. Si pide los datos a mano:
+- Comando de build: `npm run build`
+- Carpeta de salida: `dist`
+
+La primera vez, en el proyecto abre **Analytics** y pulsa **Enable**. Ahí salen las visitas.
