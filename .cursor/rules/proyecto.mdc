@@ -5,7 +5,18 @@ alwaysApply: true
 
 Antes de cada tarea lee docs/CONTEXTO.md y, al terminar, anota en su sección Bitácora la fecha y lo que cambiaste.
 
-- Marca: Obra al Día. Tono directo, sin tecnicismos, con el vocabulario de la zona (Cosoleacaque, Minatitlán y alrededores): bulto, firme, losa, enjarre, gravilla, flete, colonia, maestro de obra, encalar.
+- Marca: Obra al Día. Tono directo, español de México con tú, sin tecnicismos y con el vocabulario de la zona (Cosoleacaque, Minatitlán y alrededores): bulto, firme, losa, enjarre, gravilla, flete, colonia, maestro de obra, encalar. Poco texto: un título, una línea y una acción por sección.
+- El sitio vende tres cosas: calculadoras de obra, cotizaciones con precios de referencia y consejos de construcción (series de videos).
 - Los precios viven solo en `src/data/precios.json`. Si no hay precio, va `null` y la página dice «Precio por confirmar». Nunca inventes un precio, un teléfono ni una dirección.
 - Proporción, rendimiento y tiempo sin confirmar llevan `revisar: true` y en la página se leen como aproximados.
 - El número de WhatsApp y las redes salen de `src/data/sitio.json`.
+
+## Sistema de diseño
+
+Los tokens viven en `src/layouts/Base.astro`. El encabezado es la banda amarilla de obra, con borde inferior de 5 px en `--on-accent`.
+
+- Claro: fondo `#ECEEEA`, superficie `#FFFFFF`, hundido `#F5F6F3`, tinta `#1B2228`, muted `#5A6570`, línea `#CED4D6`, acento `#F2B705`, texto sobre acento `#1B2228`, plano `#2E5C88`.
+- Oscuro: fondo `#13171A`, superficie `#1C2227`, hundido `#171C20`, tinta `#E7EBED`, muted `#9AA6AE`, línea `#323B42`, plano `#86AFD6`. El amarillo y su texto se quedan igual en los dos modos.
+- Títulos: Big Shoulders Display 700–800, en mayúsculas. Texto: Public Sans 400–700. Medidas, cifras y cotas: IBM Plex Mono.
+- La segunda línea de un título va en el azul de plano. El texto sobre amarillo va en `--on-accent`. Nada de texto amarillo sobre fondo claro.
+- Hovers cortos, 150–200 ms, ease-out: el botón principal se levanta 2 px con sombra sólida de 4 px; el de borde pasa a `--sunk`; las obras y las pestañas encienden el borde en amarillo; la calcomanía gira 1–2° más. Con `prefers-reduced-motion`, solo cambia el color. El foco visible es un contorno de 3 px en `--plan`.

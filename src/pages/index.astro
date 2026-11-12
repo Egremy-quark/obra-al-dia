@@ -12,17 +12,11 @@ const medios = (m3) => Math.ceil(m3 / 0.5 - 1e-9);
 const costoAg = (k, m3) => { const n = medios(m3); const a = precios.agregados[k]; return Math.floor(n / 2) * a.metro + (n % 2) * a.medio; };
 const ej = [
   { n: 'Cemento Cruz Azul', q: Math.ceil(vol * 7) + ' bultos', t: Math.ceil(vol * 7) * precios.productos.cemento.precio },
-  { n: 'Gravilla fina', q: (medios(vol * 0.55) / 2).toString().replace('.', '.') + ' m³', t: costoAg('gravillaF', vol * 0.55) },
+  { n: 'Gravilla fina', q: (medios(vol * 0.55) / 2) + ' m³', t: costoAg('gravillaF', vol * 0.55) },
   { n: 'Grava', q: (medios(vol * 0.65) / 2) + ' m³', t: costoAg('grava', vol * 0.65) },
 ];
 const ejTotal = ej.reduce((s, l) => s + l.t, 0);
 
-const obras = [
-  { id: 'firme', t: 'Firme de concreto', d: 'Patio, cochera o el piso de un cuarto.', cota: 'L × A × espesor' },
-  { id: 'losa', t: 'Losa', d: 'Techo de concreto con parrilla de varilla.', cota: 'L × A · varilla @ 20 cm' },
-  { id: 'muro', t: 'Muro de block', d: 'Barda o muro con castillos y dala.', cota: 'L × alto · 12.5 pzas/m²' },
-  { id: 'aplanado', t: 'Aplanado', d: 'Enjarre rústico y, si quieres, acabado liso.', cota: 'm² × 1.5 cm' },
-];
 const p = precios.productos, a = precios.agregados;
 const tabla = [
   [p.cemento.nombre, p.cemento.detalle, mxn(p.cemento.precio)],
@@ -34,132 +28,244 @@ const tabla = [
   [p.armex10.nombre, p.armex10.detalle, mxn(p.armex10.precio)],
 ];
 ---
-<Base title="Obra al Día · ¿Cuánto cuesta tu obra?" description="Calcula el material de tu obra con precios reales de Cosoleacaque y alrededores, y recibe tu cotización por WhatsApp." active="inicio">
+<Base title="Obra al Día · ¿Cuánto cuesta tu obra?" description="Calcula el material y su precio de referencia en un minuto. Cosoleacaque, Minatitlán y alrededores." active="inicio">
   <section class="hero">
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow">Para {sitio.zona}</p>
-        <h1 class="display hero-t">¿Cuánto cuesta<br />tu obra?</h1>
-        <p class="lead">Pon las medidas, te sale la lista de material con precios reales de la zona y te la mandamos por WhatsApp. Sin choros y sin compromiso.</p>
+        <p class="eyebrow">Calculadora de obra · Cosoleacaque y alrededores</p>
+        <h1 class="display hero-t">¿Cuánto cuesta<br /><span class="terra">tu obra?</span></h1>
+        <p class="lead">Calcula el material y su precio de referencia en un minuto.</p>
         <div class="cta">
-          <a class="btn primary" href="cotizador.html">Calcular mi obra</a>
-          <a class="btn ghost" href="#precios">Ver precios</a>
+          <a class="btn dark" href="cotizador.html">Calcular mi obra →</a>
+          <a class="btn" href="#consejos">Ver consejos</a>
         </div>
       </div>
-      <figure class="ticket" aria-label="Ejemplo de cotización">
-        <div class="ticket-h"><span class="mono">COTIZACIÓN · EJEMPLO</span><span class="mono">5.00 × 4.00 m</span></div>
-        <p class="ticket-t">Firme de concreto, 8 cm</p>
-        <table>
-          <tbody>
-            {ej.map((l) => (<tr><td>{l.n}<span class="sub mono">{l.q}</span></td><td class="n"><strong>{mxn(l.t)}</strong></td></tr>))}
-          </tbody>
-        </table>
-        <div class="ticket-tot"><span>Total estimado</span><strong>{mxn(ejTotal)}</strong></div>
-        <figcaption class="mono">Precios al {fecha}</figcaption>
+      <figure class="sticker" aria-label="Ejemplo: firme de 5 por 4 metros">
+        <p class="sticker-k">Firme 5×4 m · 8 cm</p>
+        <ul>
+          {ej.map((l) => (<li><span>{l.n}<small>{l.q}</small></span><b>{mxn(l.t)}</b></li>))}
+        </ul>
+        <p class="sticker-tot"><span>Total</span><strong>{mxn(ejTotal)}</strong></p>
       </figure>
     </div>
   </section>
 
-  <section class="wrap block" aria-labelledby="t-obras">
-    <div class="sec-h"><p class="eyebrow">Calculadoras</p><h2 id="t-obras" class="h2">¿Qué vas a construir?</h2></div>
-    <div class="obras">
-      <a class="obra destacada" href="encalar-navidad.html">
-        <span class="obra-tag">Especial de Navidad</span>
-        <span class="obra-t">Encalar la casa</span>
-        <span class="obra-d">Cal con cemento blanco, por partes, para dejarla blanca antes de las fiestas. Sale barata, el muro queda fresco y dura más que la cal sola.</span>
-        <span class="obra-c mono">Serie · ¿Cuánto cuesta…?</span>
-        <span class="obra-go">Ver la serie →</span>
-      </a>
-      {obras.map((o) => (
-        <a class="obra" href={'cotizador.html#' + o.id}>
-          <span class="obra-t">{o.t}</span>
-          <span class="obra-d">{o.d}</span>
-          <span class="obra-c mono">{o.cota}</span>
-          <span class="obra-go">Calcular →</span>
-        </a>
-      ))}
-      <div class="obra pronto"><span class="obra-t">Baño completo</span><span class="obra-d">Muros, firme, plomería y loseta.</span><span class="obra-c mono">Próximamente</span></div>
+  <section class="wrap trio-sec" aria-labelledby="t-damos">
+    <h2 id="t-damos" class="display sec-t">Lo que te damos</h2>
+    <div class="trio">
+      <article>
+        <p class="num">01</p>
+        <h3>Calcula</h3>
+        <p>Pon tus medidas y sale tu lista de material.</p>
+        <div class="doodle" aria-hidden="true">
+          <span class="mini">¿5×4 m?</span>
+          <span class="rays"><i></i><i></i><i></i></span>
+        </div>
+      </article>
+      <article>
+        <p class="num">02</p>
+        <h3>Cotiza</h3>
+        <p>Precios de referencia de la zona, como se venden: por bulto, pieza o medio metro.</p>
+        <div class="bloques" aria-hidden="true"><i class="c"></i><i class="s"></i><i class="l"></i></div>
+      </article>
+      <article>
+        <p class="num">03</p>
+        <h3>Aprende</h3>
+        <p>Consejos de obra explicados fácil en nuestros videos.</p>
+        <div class="flujo" aria-hidden="true"><span>Mide</span><b>→</b><span class="mid">Calcula</span><b>→</b><span>Construye</span></div>
+      </article>
     </div>
   </section>
 
-  <section class="wrap block" aria-labelledby="t-pasos">
-    <div class="sec-h"><p class="eyebrow">Así funciona</p><h2 id="t-pasos" class="h2">De la medida al material en 3 pasos</h2></div>
-    <ol class="pasos">
-      <li><span class="num">1</span><h3>Pon tus medidas</h3><p>Largo, ancho y espesor. Si no sabes alguna, deja la que viene: es lo más común.</p></li>
-      <li><span class="num">2</span><h3>Revisa tu lista</h3><p>Cemento, gravillas, block y acero ya redondeados como se venden: por bulto, pieza o medio metro.</p></li>
-      <li><span class="num">3</span><h3>Pídela por WhatsApp</h3><p>Mándanos tu lista y te confirmamos precio, existencia y flete a tu colonia.</p></li>
-    </ol>
-  </section>
-
-  <section class="wrap block" id="precios" aria-labelledby="t-precios">
-    <div class="sec-h"><p class="eyebrow">Actualizados al {fecha}</p><h2 id="t-precios" class="h2">Precios de la zona</h2></div>
-    <div class="panel">
-      <div class="tablewrap"><table>
-        <thead><tr><th>Material</th><th>Presentación</th><th class="n">Precio</th></tr></thead>
-        <tbody>{tabla.map((r) => (<tr><td>{r[0]}</td><td class="mono">{r[1]}</td><td class="n"><strong>{r[2]}</strong></td></tr>))}</tbody>
-      </table></div>
-      <p class="fine">Precios de venta con IVA. Fuente: {precios.fuente} Pueden cambiar; confírmalos al pedir.</p>
+  <section class="elige" aria-labelledby="t-elige">
+    <div class="wrap">
+      <h2 id="t-elige" class="display sec-t light">Elige tu obra</h2>
+      <div class="switch">
+        <div class="switch-tabs" role="radiogroup" aria-label="Tipo de obra">
+          <label class="choice"><input type="radio" name="obra" id="obra-firme" checked />Firme</label>
+          <label class="choice"><input type="radio" name="obra" id="obra-losa" />Losa</label>
+          <label class="choice"><input type="radio" name="obra" id="obra-muro" />Muro</label>
+          <label class="choice"><input type="radio" name="obra" id="obra-aplanado" />Aplanado</label>
+          <label class="choice"><input type="radio" name="obra" id="obra-encalar" />Encalar · Navidad</label>
+          <label class="choice"><input type="radio" name="obra" id="obra-bano" />Baño · pronto</label>
+        </div>
+        <div class="switch-panel" id="panel-firme">
+          <p>Material y precio de un piso de concreto.</p>
+          <a class="btn dark" href="cotizador.html#firme">Calcular →</a>
+        </div>
+        <div class="switch-panel" id="panel-losa">
+          <p>Concreto y varilla para el techo.</p>
+          <a class="btn dark" href="cotizador.html#losa">Calcular →</a>
+        </div>
+        <div class="switch-panel" id="panel-muro">
+          <p>Block, castillos y dala para la barda.</p>
+          <a class="btn dark" href="cotizador.html#muro">Calcular →</a>
+        </div>
+        <div class="switch-panel" id="panel-aplanado">
+          <p>Cemento y gravilla para el enjarre.</p>
+          <a class="btn dark" href="cotizador.html#aplanado">Calcular →</a>
+        </div>
+        <div class="switch-panel" id="panel-encalar">
+          <p>Bultos de cal y cemento blanco.</p>
+          <a class="btn dark" href="encalar-navidad.html#calculadora">Calcular →</a>
+        </div>
+        <div class="switch-panel" id="panel-bano">
+          <p>Muros, firme, plomería y loseta.</p>
+          <span class="soon">Pronto</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="wrap block" aria-labelledby="t-videos">
-    <div class="videos">
+  <section class="consejos" id="consejos" aria-labelledby="t-consejos">
+    <div class="wrap consejos-in">
       <div>
-        <p class="eyebrow">Aprende antes de comprar</p>
-        <h2 id="t-videos" class="h2">Visto en Obra al Día</h2>
-        <p>Explico materiales y obra con humor y sin tecnicismos. Series como <strong>Construir vs. Comprar</strong> y <strong>¿Cuánto cuesta…?</strong>, con precios de aquí, no de la capital.</p>
+        <h2 id="t-consejos" class="display consejos-t">Construye mejor.<br />Gasta menos.</h2>
+        <ul class="checks">
+          <li>Qué comprar y cuánto</li>
+          <li>Cómo prepararlo</li>
+          <li>Cómo aplicarlo</li>
+        </ul>
+        <div class="cta">
+          <a class="btn dark" href={sitio.redes.tiktok} rel="noopener">TikTok</a>
+          <a class="btn" href={sitio.redes.instagram} rel="noopener">Instagram</a>
+        </div>
+        <p class="handle">@obra.al.dia</p>
       </div>
-      <div class="cta">
-        <a class="btn dark" href={sitio.redes.tiktok} rel="noopener">TikTok</a>
-        <a class="btn ghost" href={sitio.redes.instagram} rel="noopener">Instagram</a>
-      </div>
+      <figure class="browser">
+        <div class="browser-top" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p class="b ink">Construir vs. Comprar</p>
+        <p class="b sage">¿Cuánto cuesta…?</p>
+        <p class="b coral">Encalar en Navidad</p>
+      </figure>
     </div>
   </section>
+
+  <section class="wrap precios">
+    <details id="precios">
+      <summary><span>Precios de referencia actualizados al {fecha}</span><span class="ver">Ver precios</span></summary>
+      <div class="panel">
+        <div class="tablewrap"><table>
+          <thead><tr><th>Material</th><th>Presentación</th><th class="n">Precio</th></tr></thead>
+          <tbody>{tabla.map((r) => (<tr><td>{r[0]}</td><td>{r[1]}</td><td class="n"><strong>{r[2]}</strong></td></tr>))}</tbody>
+        </table></div>
+        <p class="fine">Con IVA. Fuente: {precios.fuente}</p>
+      </div>
+    </details>
+  </section>
+  <script is:inline>
+    const precios = document.getElementById('precios');
+    const abrir = () => { if (location.hash === '#precios' && precios) precios.open = true; };
+    abrir();
+    window.addEventListener('hashchange', abrir);
+  </script>
 </Base>
 
 <style>
-.hero{background:var(--surface);border-bottom:1px solid var(--line)}
-.hero-in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:32px;align-items:center;padding-block:44px 48px}
-@media (max-width:820px){.hero-in{grid-template-columns:minmax(0,1fr);padding-block:28px 32px}}
-.hero-copy{display:flex;flex-direction:column;gap:16px;min-width:0}
-.hero-t{font-size:clamp(52px,9vw,104px)}
+.hero-in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(240px,.8fr);gap:36px;align-items:center;padding-block:48px 64px}
+.hero-copy{display:flex;flex-direction:column;gap:18px;min-width:0}
+.hero-t{font-size:clamp(40px,5.4vw,68px)}
+.terra{color:var(--plan)}
 .cta{display:flex;flex-wrap:wrap;gap:10px}
-.ticket{margin:0;background:var(--sunk);border:1.5px dashed var(--muted);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:8px;transform:rotate(-1.2deg)}
-@media (prefers-reduced-motion:reduce){.ticket{transform:none}}
-.ticket-h{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:8px}
-.ticket-t{margin:0;font-weight:700}
-.ticket td{padding:8px 0}
-.ticket-tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding-top:8px}
-.ticket-tot span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.ticket-tot strong{font-family:var(--f-display);font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
-.ticket figcaption{font-size:11px;color:var(--muted)}
-.block{padding-block:40px 0;display:flex;flex-direction:column;gap:20px}
-.sec-h{display:flex;flex-direction:column;gap:6px}
-.obras{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.obra{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:18px;text-decoration:none;min-height:170px}
-a.obra:hover{border-color:var(--ink)}
-.obra-t{font-family:var(--f-display);font-weight:700;font-size:26px;text-transform:uppercase;line-height:1}
-.obra-d{color:var(--muted);font-size:14px}
-.obra-c{font-size:12px;color:var(--plan);margin-top:auto}
-.obra-go{font-weight:700;font-size:14px}
-.obra.pronto{background:transparent;border-style:dashed}
-.obra.pronto .obra-c{color:var(--muted)}
-.obra.destacada{border:2px solid var(--ink);box-shadow:inset 6px 0 0 var(--accent)}
-.obra-tag{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-@media (min-width:800px){
-  .obra.destacada{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:24px;align-items:center;min-height:0}
-  .obra.destacada .obra-go{grid-column:2;grid-row:1/span 4;align-self:center}
-}
-.pasos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-.pasos li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
-.pasos .num{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:1;color:var(--plan)}
-.pasos h3{margin:0;font-size:18px}
-.pasos p{margin:0;color:var(--muted);font-size:15px}
+.sticker{margin:0;background:var(--accent);color:var(--on-accent);border:3px solid var(--on-accent);border-radius:6px;padding:16px 16px 14px;box-shadow:7px 7px 0 var(--ink);transform:rotate(-2.5deg);max-width:380px}
+.sticker-k{margin:0 0 8px;font-family:var(--f-display);font-weight:800;font-size:28px;line-height:.95;letter-spacing:.01em;text-transform:uppercase}
+.sticker ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sticker li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-size:14px;border-top:1px solid var(--on-accent)}
+.sticker li span{display:flex;flex-direction:column}
+.sticker small,.sticker b{font-family:var(--f-mono);font-weight:500}
+.sticker small{font-size:12px}
+.sticker-tot{display:flex;justify-content:space-between;align-items:baseline;margin:8px 0 0;border-top:3px solid var(--on-accent);padding-top:6px}
+.sticker-tot strong{font-family:var(--f-display);font-weight:800;font-size:36px;line-height:.95;font-variant-numeric:tabular-nums}
+.sec-t{font-size:clamp(40px,6vw,64px);margin-bottom:28px}
+.trio-sec{padding-block:8px 72px}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.trio article{display:flex;flex-direction:column;gap:8px;min-width:0}
+.num{margin:0;font-family:var(--f-display);font-weight:800;font-size:42px;line-height:1;color:var(--plan)}
+.trio h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:32px;letter-spacing:.015em;text-transform:uppercase}
+.trio p{margin:0;max-width:32ch}
+.doodle{display:flex;align-items:flex-end;gap:12px;margin-top:16px}
+.mini{background:var(--accent);color:var(--on-accent);border:3px solid var(--on-accent);box-shadow:4px 4px 0 var(--ink);transform:rotate(-3deg);font-family:var(--f-display);font-weight:800;font-size:22px;line-height:.95;padding:8px 10px;text-transform:uppercase}
+.rays{display:flex;flex-direction:column;gap:7px;width:88px;padding-bottom:6px}
+.rays i{display:block;height:8px;background:var(--ink);border-radius:2px}
+.rays i:nth-child(2){width:74%}
+.rays i:nth-child(3){width:48%}
+.bloques{display:flex;align-items:flex-end;gap:10px;height:96px;margin-top:16px}
+.bloques i{display:block;width:52px;border:3px solid var(--ink)}
+.bloques .c{height:64px;background:var(--accent);transform:rotate(-4deg)}
+.bloques .s{height:84px;background:var(--plan-soft);transform:rotate(3deg)}
+.bloques .l{height:54px;background:var(--ink);transform:rotate(-2deg)}
+.flujo{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:16px}
+.flujo span{border:3px solid var(--ink);border-radius:12px;padding:8px 10px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--surface);color:var(--ink)}
+.flujo .mid{background:var(--accent);color:var(--on-accent)}
+.flujo b{font-size:18px;color:var(--ink)}
+.elige{background:var(--ink);color:var(--bg);padding-block:56px 64px}
+.elige .light{color:var(--bg)}
+.switch-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.choice{position:relative;display:inline-flex;align-items:center;border:3px solid currentColor;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer}
+.choice input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.choice:hover{border-color:var(--accent)}
+.choice:has(input:checked),.choice:has(input:checked):hover{background:var(--accent);color:var(--on-accent);border-color:var(--on-accent)}
+.choice:has(input:focus-visible){outline:3px solid var(--plan);outline-offset:2px}
+.switch-panel{display:none;margin-top:18px;padding:18px 20px;background:var(--surface);color:var(--ink);border:3px solid var(--accent);border-radius:14px;align-items:center;justify-content:space-between;gap:16px}
+.switch-panel p{margin:0;color:var(--ink);font-weight:500}
+.switch:has(#obra-firme:checked) #panel-firme,
+.switch:has(#obra-losa:checked) #panel-losa,
+.switch:has(#obra-muro:checked) #panel-muro,
+.switch:has(#obra-aplanado:checked) #panel-aplanado,
+.switch:has(#obra-encalar:checked) #panel-encalar,
+.switch:has(#obra-bano:checked) #panel-bano{display:flex}
+.soon{font-family:var(--f-display);font-weight:800;font-size:22px;background:var(--accent);color:var(--on-accent);border:3px solid var(--on-accent);border-radius:10px;padding:6px 10px;text-transform:uppercase}
+.consejos{background:var(--accent);color:var(--on-accent);padding-block:56px 64px}
+.consejos .btn{color:var(--on-accent);border-color:var(--on-accent);background:transparent}
+.consejos .btn:hover{background:var(--on-accent);color:var(--accent);border-color:var(--on-accent)}
+.consejos .btn.dark{background:var(--on-accent);color:var(--accent);border-color:var(--on-accent)}
+.consejos .btn.dark:hover{background:var(--on-accent);color:var(--accent)}
+.consejos-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.9fr);gap:36px;align-items:center}
+.consejos-t{font-size:clamp(40px,6vw,72px);color:var(--on-accent)}
+.checks{list-style:none;margin:18px 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.checks li{font-weight:500}
+.checks li::before{content:"✓  ";font-weight:700}
+.handle{margin:12px 0 0;font-weight:600}
+.browser{margin:0;background:var(--surface);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:8px 8px 0 var(--ink);transform:rotate(2.5deg);padding:12px;display:flex;flex-direction:column;gap:8px}
+.browser-top{display:flex;gap:6px;padding:2px 2px 6px}
+.browser-top i{width:10px;height:10px;border-radius:50%;border:2px solid var(--ink);background:var(--surface)}
+.b{margin:0;border:3px solid var(--ink);border-radius:12px;padding:14px 12px;font-family:var(--f-display);font-weight:800;font-size:22px;line-height:.95;letter-spacing:.01em;text-transform:uppercase}
+.b.ink{background:var(--ink);color:var(--bg)}
+.b.sage{background:var(--plan-soft);color:var(--ink)}
+.b.coral{background:var(--accent);color:var(--on-accent)}
+.precios{padding-block:28px 48px}
+.precios details summary{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;padding-block:8px}
+.precios summary::-webkit-details-marker{display:none}
+.precios summary span:first-child{font-weight:500}
+.ver{border:3px solid var(--ink);border-radius:12px;padding:10px 14px;font-weight:700;color:var(--ink)}
+.precios summary:hover .ver{background:var(--sunk);border-color:var(--ink)}
+.precios summary:focus-visible{outline:3px solid var(--plan);outline-offset:2px}
+.precios .panel{margin-top:14px}
 .fine{margin:0;font-size:13px;color:var(--muted)}
-.videos{background:var(--accent);color:var(--on-accent);border-radius:10px;padding:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px 32px}
-.videos > div:first-child{max-width:60ch;display:flex;flex-direction:column;gap:8px}
-.videos p{margin:0}
-.videos .eyebrow{color:var(--on-accent);opacity:.75}
-.videos .btn.ghost{border-color:var(--on-accent);background:transparent;color:var(--on-accent)}
-.videos .btn.dark{background:var(--on-accent);color:var(--accent);border-color:var(--on-accent)}
+@media (max-width:800px){
+  .hero-in,.trio,.consejos-in{grid-template-columns:minmax(0,1fr)}
+  .hero-in{padding-block:32px 40px}
+  .sticker,.browser{transform:none}
+  .trio-sec{padding-bottom:48px}
+  .switch-panel{flex-direction:column;align-items:flex-start}
+}
+@media (max-width:420px){
+  .hero-t{font-size:40px}
+  .sec-t{font-size:40px}
+  .consejos-t{font-size:36px}
+  .sticker{max-width:none}
+  .flujo span{font-size:12px;padding:7px 8px}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:801px){
+  .sticker,.mini,.browser,.bloques i{transition:transform .18s ease-out}
+  .sticker:hover{transform:rotate(-4.5deg)}
+  .mini:hover{transform:rotate(-5deg)}
+  .browser:hover{transform:rotate(4.5deg)}
+  .bloques .c:hover{transform:rotate(-6deg)}
+  .bloques .s:hover{transform:rotate(5deg)}
+  .bloques .l:hover{transform:rotate(-4deg)}
+}
+@media (prefers-reduced-motion:reduce){
+  .sticker,.mini,.bloques i,.browser{transform:none}
+}
 </style>

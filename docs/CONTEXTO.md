@@ -53,3 +53,19 @@ Proporción, rendimiento o tiempo que no esté confirmado lleva `revisar: true`.
 
 - La guía de publicación del README quedó en Vercel: importar `Egremy-quark/obra-al-dia`, build `npm run build`, salida `dist`.
 - El comentario de `astro.config.mjs` apunta a Vercel.
+
+### 2026-11-12 · rediseño
+
+- Nuevo sistema en `src/layouts/Base.astro`: crema, tinta, coral y terracota; Archivo expandido e Inter. El amarillo queda solo en calcomanías y etiquetas. Modo oscuro invierte crema y negro.
+- Inicio reordenado en seis bloques: hero, lo que te damos, elige tu obra, consejos, precios en un `<details>` y pie corto. Se quitaron «Así funciona», las tarjetas de obras y la sección larga de videos.
+- Cotizador con los mismos cálculos y el mismo WhatsApp. Pasos 01–04, pestañas tipo botón y «Cómo se calcula» cerrado en un `<details>`.
+- `.cursor/rules/proyecto.mdc` describe el sistema nuevo.
+
+### 2026-11-12 · paleta original
+
+- Regresó la paleta de obra en `src/layouts/Base.astro`: fondo `#ECEEEA`, amarillo `#F2B705`, azul de plano `#2E5C88`. En oscuro, fondo `#13171A` y plano `#86AFD6`. El amarillo y su texto se quedan igual. Se quitaron crema decorativa, coral, terracota, salvia y lavanda.
+- Fuentes: Big Shoulders Display en mayúsculas, Public Sans e IBM Plex Mono. Salieron Archivo e Inter.
+- El encabezado vuelve a la banda amarilla con borde inferior de 5 px.
+- «Elige tu obra» usa fondo `--ink` y texto `--bg`. «Construye mejor» usa fondo amarillo y texto `--on-accent`.
+- Hovers de 180 ms: el botón principal se levanta 2 px con sombra sólida, el de borde pasa a `--sunk`, las obras y las pestañas encienden el borde en amarillo, y la calcomanía gira 2° más. Con `prefers-reduced-motion` solo cambia el color. El foco visible es un contorno de 3 px en `--plan`.
+- El acomodo, los textos y los cálculos quedan igual. `npm run build` terminó sin errores.
