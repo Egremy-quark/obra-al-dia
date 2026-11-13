@@ -88,6 +88,7 @@ const tabla = [
           <label class="choice"><input type="radio" name="obra" id="obra-aplanado" />Aplanado</label>
           <label class="choice"><input type="radio" name="obra" id="obra-encalar" />Encalar · Navidad</label>
           <label class="choice"><input type="radio" name="obra" id="obra-bano" />Baño · pronto</label>
+          <label class="choice"><input type="radio" name="obra" id="obra-tornilleria" />Tornillería</label>
         </div>
         <div class="switch-panel" id="panel-firme">
           <p>Material y precio de un piso de concreto.</p>
@@ -112,6 +113,10 @@ const tabla = [
         <div class="switch-panel" id="panel-bano">
           <p>Muros, firme, plomería y loseta.</p>
           <span class="soon">Pronto</span>
+        </div>
+        <div class="switch-panel" id="panel-tornilleria">
+          <p>Pijas, tornillos y taquetes, y cómo pedirlos.</p>
+          <a class="btn dark" href="tornilleria.html">Ver tornillería →</a>
         </div>
       </div>
     </div>
@@ -213,7 +218,8 @@ const tabla = [
 .switch:has(#obra-muro:checked) #panel-muro,
 .switch:has(#obra-aplanado:checked) #panel-aplanado,
 .switch:has(#obra-encalar:checked) #panel-encalar,
-.switch:has(#obra-bano:checked) #panel-bano{display:flex}
+.switch:has(#obra-bano:checked) #panel-bano,
+.switch:has(#obra-tornilleria:checked) #panel-tornilleria{display:flex}
 .soon{font-family:var(--f-display);font-weight:800;font-size:22px;background:var(--accent);color:var(--on-accent);border:3px solid var(--on-accent);border-radius:10px;padding:6px 10px;text-transform:uppercase}
 .consejos{background:var(--accent);color:var(--on-accent);padding-block:56px 64px}
 .consejos .btn{color:var(--on-accent);border-color:var(--on-accent);background:transparent}

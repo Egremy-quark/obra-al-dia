@@ -31,9 +31,11 @@ const umamiId = String(sitio.umami_id || '').trim();
   <header class="top">
     <div class="wrap top-in">
       <a class="logo" href="index.html" aria-label="Obra al Día, inicio">Obra al Día</a>
+      {active === 'tornilleria' && <span class="marca-tag">Tornillería</span>}
       <nav aria-label="Principal">
         <a href="index.html" aria-current={active === 'inicio' ? 'page' : undefined}>Inicio</a>
         <a href="cotizador.html" aria-current={active === 'cotizador' ? 'page' : undefined}>Cotizador</a>
+        <a href="tornilleria.html" aria-current={active === 'tornilleria' ? 'page' : undefined}>Tornillería</a>
         <a href="encalar-navidad.html" aria-current={active === 'navidad' ? 'page' : undefined}>Navidad</a>
         <a href="index.html#precios">Precios</a>
       </nav>
@@ -78,6 +80,7 @@ a{color:inherit;text-decoration:none}
 .logo{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;color:var(--ink);margin:0}
 .top .logo{color:var(--on-accent)}
 .logo.small{font-size:22px}
+.marca-tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--on-accent);color:var(--accent);border-radius:8px;padding:4px 8px}
 .top nav{display:flex;gap:4px;flex-wrap:wrap}
 .top nav a{font-weight:600;font-size:15px;text-decoration:none;padding:6px 10px;border-radius:8px;color:var(--on-accent)}
 .top nav a[aria-current="page"]{background:var(--on-accent);color:var(--accent)}

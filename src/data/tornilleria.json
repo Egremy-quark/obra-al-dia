@@ -1,0 +1,72 @@
+{
+  "usos": [
+    {
+      "id": "madera",
+      "nombre": "Madera",
+      "tipo": "Pija para madera.",
+      "lleva": "Sin taquete ni tuerca. Cuerda gruesa y punta.",
+      "error": "Pedir tornillo de máquina: no agarra la madera.",
+      "pedido": "Pija para madera, del grueso y el largo.",
+      "revisar": true
+    },
+    {
+      "id": "lamina",
+      "nombre": "Lámina",
+      "tipo": "Pija autorroscante o autotaladrante para lámina.",
+      "lleva": "En techos, rondana de neopreno. Sin taquete.",
+      "error": "Usar pija de madera: no sella.",
+      "pedido": "Pija para lámina, con rondana de neopreno.",
+      "revisar": true
+    },
+    {
+      "id": "concreto",
+      "nombre": "Concreto o block",
+      "tipo": "Taquete de plástico y pija. Ancla expansiva si la carga es pesada.",
+      "lleva": "Taquete, o ancla si cuelga peso.",
+      "error": "Meter la pija directo al block, sin taquete.",
+      "pedido": "Taquete y pija para block.",
+      "revisar": true
+    },
+    {
+      "id": "metal",
+      "nombre": "Metal con tuerca",
+      "tipo": "Tornillo de máquina, cabeza hexagonal.",
+      "lleva": "Tuerca y rondana. Cuerda estándar o fina.",
+      "error": "Pedir pija: la pija no lleva tuerca.",
+      "pedido": "Tornillo hexagonal, con tuerca y rondana.",
+      "revisar": true
+    },
+    {
+      "id": "tablaroca",
+      "nombre": "Tablaroca",
+      "tipo": "Pija para tablaroca.",
+      "lleva": "Taquete especial si vas a colgar peso.",
+      "error": "Colgar peso con la pija sola.",
+      "pedido": "Pija para tablaroca.",
+      "revisar": true
+    }
+  ],
+  "pasos": [
+    { "numero": "01", "titulo": "Tipo", "linea": "Pija, tornillo de máquina o ancla.", "revisar": true },
+    { "numero": "02", "titulo": "Medida", "linea": "Grueso × largo. Ejemplo: 1/4\" × 2\".", "revisar": true },
+    { "numero": "03", "titulo": "Cabeza", "linea": "Hexagonal, plana o redonda. Cruz o plana.", "revisar": true },
+    { "numero": "04", "titulo": "Acabado", "linea": "Galvanizado, inoxidable o pavonado.", "revisar": true }
+  ],
+  "opciones": {
+    "tipo": ["Pija", "Tornillo de máquina", "Ancla"],
+    "cabeza": ["Hexagonal", "Plana", "Redonda", "Cruz"],
+    "acabado": ["Galvanizado", "Inoxidable", "Pavonado"],
+    "revisar": true
+  },
+  "ejemplo": {
+    "texto": "Tornillo hexagonal galvanizado 1/4 × 2 con tuerca y rondana",
+    "revisar": true
+  },
+  "serie": [
+    { "numero": 1, "titulo": "Pija vs. tornillo", "resumen": "En qué se distinguen.", "video_url": "", "estado": "proximamente", "revisar": true },
+    { "numero": 2, "titulo": "Cómo se mide un tornillo", "resumen": "Grueso por largo.", "video_url": "", "estado": "proximamente", "revisar": true },
+    { "numero": 3, "titulo": "Cabezas y para qué sirve cada una", "resumen": "Hexagonal, plana, redonda, cruz.", "video_url": "", "estado": "proximamente", "revisar": true },
+    { "numero": 4, "titulo": "Taquetes: cuál usar en block y concreto", "resumen": "Cuál va en block y en concreto.", "video_url": "", "estado": "proximamente", "revisar": true },
+    { "numero": 5, "titulo": "Cómo pedir en mostrador sin que te vean raro", "resumen": "Cómo decirlo en el mostrador.", "video_url": "", "estado": "proximamente", "revisar": true }
+  ]
+}

@@ -1,0 +1,312 @@
+---
+import Base from '../layouts/Base.astro';
+import sitio from '../data/sitio.json';
+import datos from '../data/tornilleria.json';
+import preciosTornilleria from '../data/precios-tornilleria.json';
+
+const nombreTienda = String(sitio.tornilleria?.nombre || '').trim() || 'Nuestra tornillería';
+const whatsapp = String(sitio.tornilleria?.whatsapp || '').trim() || sitio.whatsapp;
+const usos = datos.usos;
+const primero = usos[0].id;
+const serie = datos.serie;
+const tonos = ['ink', 'sage', 'coral'];
+const productos = Array.isArray(preciosTornilleria.productos) ? preciosTornilleria.productos : [];
+---
+<Base
+  title="Tornillería · Obra al Día"
+  description="Aprende a distinguir los tornillos y pídelos bien a la primera."
+  active="tornilleria"
+>
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow">Tornillería · serie de videos</p>
+        <h1 class="display hero-t">¿Qué tornillo<br /><span class="terra">necesitas?</span></h1>
+        <p class="lead">Aprende a distinguirlos y pídelos bien a la primera.</p>
+        <div class="cta">
+          <a class="btn dark" href="#fijar">Encontrar mi tornillo →</a>
+          <a class="btn" href="#como">Cómo se piden</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="elige" id="fijar" aria-labelledby="t-fijar">
+    <div class="wrap">
+      <h2 id="t-fijar" class="display sec-t light">¿Qué vas a fijar?</h2>
+      <div class="switch">
+        <div class="switch-tabs" role="radiogroup" aria-label="Qué vas a fijar">
+          {usos.map((u) => (
+            <label class="choice">
+              <input type="radio" name="fijar" id={`fijar-${u.id}`} checked={u.id === primero} />
+              {u.nombre}
+            </label>
+          ))}
+        </div>
+        {usos.map((u) => (
+          <div class="switch-panel" id={`panel-${u.id}`}>
+            <div class="facts">
+              <p><b>Tipo.</b> {u.tipo}</p>
+              <p><b>Lleva.</b> {u.lleva}</p>
+              <p><b>Error.</b> {u.error}</p>
+              <p><b>Pídelo.</b> {u.pedido}</p>
+              {u.revisar && <p class="aprox">Aproximado</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap trio-sec" id="como" aria-labelledby="t-como">
+    <h2 id="t-como" class="display sec-t">Cómo se pide un tornillo</h2>
+    <div class="trio">
+      {datos.pasos.map((p) => (
+        <article>
+          <p class="num">{p.numero}</p>
+          <h3>{p.titulo}</h3>
+          <p>{p.linea}</p>
+          {p.revisar && <p class="aprox">Aproximado</p>}
+        </article>
+      ))}
+    </div>
+    <figure class="sticker">
+      <p class="sticker-k">{datos.ejemplo.texto}</p>
+      {datos.ejemplo.revisar && <p class="aprox">Aproximado</p>}
+    </figure>
+  </section>
+
+  <section class="wrap pedido" id="pedido" aria-labelledby="t-pedido">
+    <h2 id="t-pedido" class="display sec-t">Arma tu pedido</h2>
+    <p class="lead">Se manda a {nombreTienda}.</p>
+    <form class="form" id="form-pedido">
+      <label>Tipo
+        <select name="tipo" required>
+          <option value="">Elige</option>
+          {datos.opciones.tipo.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </label>
+      <label>Medida
+        <input name="medida" required maxlength="40" autocomplete="off" />
+      </label>
+      <label>Cabeza
+        <select name="cabeza" required>
+          <option value="">Elige</option>
+          {datos.opciones.cabeza.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </label>
+      <label>Acabado
+        <select name="acabado" required>
+          <option value="">Elige</option>
+          {datos.opciones.acabado.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </label>
+      <label>Cantidad
+        <input name="cantidad" type="number" min="1" step="1" required inputmode="numeric" />
+      </label>
+      <button class="btn" type="submit">Agregar</button>
+    </form>
+    <p class="aviso-form" id="aviso-form" role="status"></p>
+    <ul class="lista" id="lista"></ul>
+    <button class="btn wa" type="button" id="enviar" disabled>Enviar pedido por WhatsApp</button>
+  </section>
+
+  <section class="consejos" id="serie" aria-labelledby="t-serie">
+    <div class="wrap consejos-in">
+      <div>
+        <h2 id="t-serie" class="display consejos-t">La serie</h2>
+        <p class="lead serie-lead">Videos de la tornillería, por partes.</p>
+        <div class="cta">
+          <a class="btn dark" href={sitio.redes.tiktok} rel="noopener">TikTok</a>
+          <a class="btn" href={sitio.redes.instagram} rel="noopener">Instagram</a>
+        </div>
+      </div>
+      <div class="browser">
+        <div class="browser-top" aria-hidden="true"><i></i><i></i><i></i></div>
+        {serie.map((p, i) => {
+          const clase = 'b ' + tonos[i % tonos.length];
+          const inner = (
+            <>
+              <span class="b-n">{String(p.numero).padStart(2, '0')}</span>
+              {p.titulo}
+              <small>{p.resumen}</small>
+              {p.estado === 'publicado' && p.video_url
+                ? <small class="estado">Ver video</small>
+                : <small class="estado">Próximamente</small>}
+              {p.revisar && <small class="estado">Aproximado</small>}
+            </>
+          );
+          return p.estado === 'publicado' && p.video_url
+            ? <a class={clase} href={p.video_url} rel="noopener">{inner}</a>
+            : <p class={clase}>{inner}</p>;
+        })}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { enviarPedido } from '../lib/whatsapp.js';
+    import { activarEventos } from '../lib/umami.js';
+    window.obraEnviarPedido = enviarPedido;
+    activarEventos();
+  </script>
+  <script is:inline define:vars={{ whatsapp, nombreTienda, productos }}>
+    var items = [];
+    var form = document.getElementById('form-pedido');
+    var lista = document.getElementById('lista');
+    var aviso = document.getElementById('aviso-form');
+    var enviar = document.getElementById('enviar');
+    var mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });
+
+    function precioDe(tipo) {
+      var listaPrecios = Array.isArray(productos) ? productos : [];
+      for (var i = 0; i < listaPrecios.length; i++) {
+        var p = listaPrecios[i];
+        if (p && p.nombre === tipo && typeof p.precio === 'number' && isFinite(p.precio)) return p.precio;
+      }
+      return null;
+    }
+
+    function pintar() {
+      lista.textContent = '';
+      items.forEach(function (it, idx) {
+        var li = document.createElement('li');
+        var span = document.createElement('span');
+        span.textContent = it.tipo + ' · ' + it.medida + ' · ' + it.cabeza + ' · ' + it.acabado + ' · ' + it.cantidad;
+        li.appendChild(span);
+        var precio = precioDe(it.tipo);
+        if (precio != null) {
+          var b = document.createElement('b');
+          b.textContent = mxn.format(precio);
+          li.appendChild(b);
+        }
+        var quitar = document.createElement('button');
+        quitar.type = 'button';
+        quitar.className = 'quitar';
+        quitar.setAttribute('aria-label', 'Quitar renglón');
+        quitar.textContent = '×';
+        quitar.addEventListener('click', function () {
+          items.splice(idx, 1);
+          pintar();
+        });
+        li.appendChild(quitar);
+        lista.appendChild(li);
+      });
+      enviar.disabled = items.length === 0;
+    }
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var data = new FormData(form);
+      var tipo = String(data.get('tipo') || '').trim();
+      var medida = String(data.get('medida') || '').trim();
+      var cabeza = String(data.get('cabeza') || '').trim();
+      var acabado = String(data.get('acabado') || '').trim();
+      var cantidad = parseInt(String(data.get('cantidad') || ''), 10);
+      if (!tipo || !medida || !cabeza || !acabado || !cantidad || cantidad < 1) {
+        aviso.textContent = 'Falta un dato.';
+        return;
+      }
+      aviso.textContent = '';
+      items.push({ tipo: tipo, medida: medida, cabeza: cabeza, acabado: acabado, cantidad: cantidad });
+      form.reset();
+      pintar();
+    });
+
+    enviar.addEventListener('click', function () {
+      if (!items.length || typeof window.obraEnviarPedido !== 'function') return;
+      var lineas = items.map(function (it) {
+        var s = '• ' + it.tipo + ' · ' + it.medida + ' · ' + it.cabeza + ' · ' + it.acabado + ' · ' + it.cantidad;
+        var precio = precioDe(it.tipo);
+        if (precio != null) s += ' · ' + mxn.format(precio);
+        return s;
+      });
+      var texto = ['Hola, quiero estos tornillos (' + nombreTienda + '):'].concat(lineas).join('\n');
+      if (typeof window.obraEvento === 'function') window.obraEvento('whatsapp_enviado', { obra: 'tornilleria' });
+      window.obraEnviarPedido(whatsapp, texto);
+    });
+  </script>
+</Base>
+
+<style>
+.hero-in{padding-block:48px 64px}
+.hero-copy{display:flex;flex-direction:column;gap:18px;min-width:0}
+.hero-t{font-size:clamp(40px,5.4vw,68px)}
+.terra{color:var(--plan)}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.sticker{margin:36px 0 0;background:var(--accent);color:var(--on-accent);border:3px solid var(--on-accent);border-radius:6px;padding:16px 16px 14px;box-shadow:7px 7px 0 var(--ink);transform:rotate(-2.5deg);max-width:420px}
+.sticker-k{margin:0;font-family:var(--f-display);font-weight:800;font-size:26px;line-height:.95;letter-spacing:.01em;text-transform:uppercase}
+.sticker .aprox{color:var(--on-accent)}
+.aprox{margin:8px 0 0;font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.sec-t{font-size:clamp(40px,6vw,64px);margin-bottom:28px}
+.elige{background:var(--ink);color:var(--bg);padding-block:56px 64px}
+.elige .light{color:var(--bg)}
+.switch-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.choice{position:relative;display:inline-flex;align-items:center;border:3px solid currentColor;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer}
+.choice input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.choice:hover{border-color:var(--accent)}
+.choice:has(input:checked),.choice:has(input:checked):hover{background:var(--accent);color:var(--on-accent);border-color:var(--on-accent)}
+.choice:has(input:focus-visible){outline:3px solid var(--plan);outline-offset:2px}
+.switch-panel{display:none;margin-top:18px;padding:18px 20px;background:var(--surface);color:var(--ink);border:3px solid var(--accent);border-radius:14px}
+.switch:has(#fijar-madera:checked) #panel-madera,
+.switch:has(#fijar-lamina:checked) #panel-lamina,
+.switch:has(#fijar-concreto:checked) #panel-concreto,
+.switch:has(#fijar-metal:checked) #panel-metal,
+.switch:has(#fijar-tablaroca:checked) #panel-tablaroca{display:block}
+.facts{display:flex;flex-direction:column;gap:8px}
+.facts p{margin:0;color:var(--ink)}
+.facts b{font-weight:700}
+.trio-sec{padding-block:56px 64px}
+.trio{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px}
+.trio article{display:flex;flex-direction:column;gap:8px;min-width:0}
+.num{margin:0;font-family:var(--f-display);font-weight:800;font-size:42px;line-height:1;color:var(--plan)}
+.trio h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:32px;letter-spacing:.015em;text-transform:uppercase}
+.trio p{margin:0;max-width:28ch}
+.pedido{padding-bottom:64px;display:flex;flex-direction:column;gap:16px}
+.pedido .sec-t{margin-bottom:0}
+.form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end}
+.form label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px;min-width:0}
+.form input,.form select{font:inherit;font-weight:500;color:var(--ink);background:var(--surface);border:3px solid var(--ink);border-radius:12px;padding:10px 12px;width:100%}
+.aviso-form{margin:0;min-height:1.4em;font-weight:600;color:var(--danger)}
+.lista{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.lista li{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.lista span{flex:1 1 180px}
+.lista b{font-family:var(--f-mono);font-weight:500}
+.quitar{font:inherit;font-weight:700;border:0;background:transparent;color:var(--danger);cursor:pointer;padding:4px 8px}
+.consejos{background:var(--accent);color:var(--on-accent);padding-block:56px 64px}
+.consejos .btn{color:var(--on-accent);border-color:var(--on-accent);background:transparent}
+.consejos .btn.dark{background:var(--on-accent);color:var(--accent);border-color:var(--on-accent)}
+.consejos-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.9fr);gap:36px;align-items:center}
+.consejos-t{font-size:clamp(40px,6vw,72px);color:var(--on-accent);margin-bottom:12px}
+.serie-lead{color:var(--on-accent);max-width:28ch}
+.browser{margin:0;background:var(--surface);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:8px 8px 0 var(--ink);transform:rotate(2.5deg);padding:12px;display:flex;flex-direction:column;gap:8px}
+.browser-top{display:flex;gap:6px;padding:2px 2px 6px}
+.browser-top i{width:10px;height:10px;border-radius:50%;border:2px solid var(--ink);background:var(--surface)}
+.b{margin:0;border:3px solid var(--ink);border-radius:12px;padding:12px;font-family:var(--f-display);font-weight:800;font-size:20px;line-height:.95;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;display:flex;flex-direction:column;gap:4px}
+.b small{font-family:var(--f-body);font-weight:500;font-size:14px;letter-spacing:0;text-transform:none;line-height:1.35}
+.b .estado{font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.b.ink{background:var(--ink);color:var(--bg)}
+.b.sage{background:var(--plan-soft);color:var(--ink)}
+.b.coral{background:var(--accent);color:var(--on-accent)}
+.b.ink small{color:var(--bg)}
+@media (max-width:800px){
+  .hero-in,.consejos-in,.trio,.form{grid-template-columns:minmax(0,1fr)}
+  .hero-in{padding-block:32px 40px}
+  .sticker,.browser{transform:none}
+  .trio-sec{padding-block:40px 48px}
+}
+@media (max-width:420px){
+  .hero-t{font-size:40px}
+  .sec-t{font-size:40px}
+  .consejos-t{font-size:36px}
+  .sticker{max-width:none}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:801px){
+  .sticker,.browser{transition:transform .18s ease-out}
+  .sticker:hover{transform:rotate(-4.5deg)}
+  .browser:hover{transform:rotate(4.5deg)}
+}
+@media (prefers-reduced-motion:reduce){
+  .sticker,.browser{transform:none}
+}
+</style>
